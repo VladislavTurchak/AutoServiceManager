@@ -80,12 +80,60 @@ namespace AutoServiceManager
             RefreshClients();
         }
 
-        // Просто оновлення таблиці
+        // оновлення таблиці
         private void btnRefresh_Click(object sender, EventArgs e)
         {
             RefreshClients();
         }
 
-       
+        void RefreshCars(Client client)
+        {
+            dataGridCars.DataSource = null;
+            dataGridCars.DataSource = client.Cars;
+        }
+
+        private void dataGridClients_CellContentClick(object sender, DataGridViewCellEventArgs e)
+        {
+            if (dataGridClients.CurrentRow == null)
+                return;
+
+            Client client = (Client)dataGridClients.CurrentRow.DataBoundItem;
+
+            RefreshCars(client);
+        }
+
+        private void btnAddCar_Click(object sender, EventArgs e)
+            {
+                if (dataGridClients.CurrentRow == null)
+                {
+                    MessageBox.Show("Select client");
+    
+                    return;
+                }
+    
+                if (txtBrand.Text == "" || txtModel.Text == "" || txtPlate.Text == "")
+                {
+                    MessageBox.Show("Enter data");
+    
+                    return;
+                }
+    
+                Client client = (Client)dataGridClients.CurrentRow.DataBoundItem;
+    
+                Car car = new Car
+                {
+                    Brand = txtBrand.Text,
+                    Model = txtModel.Text,
+                    PlateNumber = txtPlate.Text
+                };
+    
+                client.Cars.Add(car);
+    
+                RefreshCars(client);
+            MessageBox.Show($"Додано! Зараз у клієнта  авто");
+                txtBrand.Clear();
+                txtModel.Clear();
+                txtPlate.Clear();
+        }
     }
 }

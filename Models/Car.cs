@@ -15,8 +15,8 @@ namespace AutoServiceManager.Models
         // Модель автомобіля (наприклад: Civic)
         public string Model { get; set; }
 
-        // Рік випуску автомобіля
-        public int Year { get; set; }
+        // номерний знак автомобіля
+        public string PlateNumber { get; set; }
 
         // Список замовлень (ремонтів/обслуговувань) для цього авто
         // Використовується узагальнена колекція List
