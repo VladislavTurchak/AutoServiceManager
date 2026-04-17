@@ -35,16 +35,38 @@ namespace AutoServiceManager.Data
         {
             try
             {
-                // Читаємо текст із файлу
                 string json = File.ReadAllText(path);
 
-                // Перетворюємо JSON назад у список клієнтів
-                // ?? означає: якщо десеріалізація повернула null — створити новий список
-                Clients = JsonSerializer.Deserialize<List<Client>>(json) ?? new List<Client>();
+                var clients = JsonSerializer.Deserialize<List<Client>>(json) ?? new List<Client>();
+
+                foreach (var client in clients)
+                {
+                    foreach (var car in client.Cars)
+                    {
+                        foreach (var order in car.Orders)
+                        {
+                            if (order.Service == null)
+                                continue;
+
+                            // Перетворюємо object → JSON → конкретний клас
+                            var jsonService = JsonSerializer.Serialize(order.Service);
+
+                            if (jsonService.Contains("Repair"))
+                            {
+                                order.Service = JsonSerializer.Deserialize<RepairService>(jsonService);
+                            }
+                            else
+                            {
+                                order.Service = JsonSerializer.Deserialize<MaintenanceService>(jsonService);
+                            }
+                        }
+                    }
+                }
+
+                Clients = clients;
             }
             catch (Exception ex)
             {
-                // Якщо файл не знайдено або інша помилка
                 MessageBox.Show(ex.Message);
             }
         }

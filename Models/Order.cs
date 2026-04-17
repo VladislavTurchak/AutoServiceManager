@@ -17,10 +17,19 @@ namespace AutoServiceManager.Models
 
         // Послуга яка виконується (ремонт або ТО)
         // Використовується базовий клас Service (поліморфізм)
-        public Service Service { get; set; }
+        public object? Service { get; set; }
 
         // Загальна ціна замовлення
         // Автоматично обчислюється через метод CalculatePrice()
-        public decimal TotalPrice => Service.CalculatePrice();
+        public decimal TotalPrice
+        {
+            get
+            {
+                if (Service is Service s)
+                    return s.CalculatePrice();
+
+                return 0;
+            }
+        }
     }
 }

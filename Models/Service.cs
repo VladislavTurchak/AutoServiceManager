@@ -11,7 +11,10 @@ namespace AutoServiceManager.Models
     public abstract class Service
     {
         // Назва послуги
-        public string Name { get; set; }
+        public string Name { get; set; } = "";
+
+        // Тип послуги (Ремонт, ТО)
+        public string Type { get; set; } = "";
 
         // Базова ціна послуги
         public decimal BasePrice { get; set; }

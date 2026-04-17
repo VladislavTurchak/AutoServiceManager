@@ -73,11 +73,29 @@ namespace AutoServiceManager
         // Кнопка завантаження
         private void btnLoad_Click(object sender, EventArgs e)
         {
-            // Завантажуємо список клієнтів із файлу
             fileManager.Load("data.json");
 
-            // Оновлюємо таблицю
             RefreshClients();
+
+            dataGridCars.DataSource = null;
+            dataGridOrders.DataSource = null;
+
+            if (dataGridClients.Rows.Count > 0)
+            {
+                dataGridClients.Rows[0].Selected = true;
+
+                var client = dataGridClients.Rows[0].DataBoundItem as Client;
+
+                if (client != null)
+                {
+                    RefreshCars(client);
+
+                    if (client.Cars.Count > 0)
+                    {
+                        RefreshOrders(client.Cars[0]);
+                    }
+                }
+            }
         }
 
         // оновлення таблиці
@@ -86,8 +104,10 @@ namespace AutoServiceManager
             RefreshClients();
         }
 
-        void RefreshCars(Client client)
+        void RefreshCars(Client? client)
         {
+            if (client == null) return;
+
             dataGridCars.DataSource = null;
             dataGridCars.DataSource = client.Cars;
         }
@@ -103,37 +123,110 @@ namespace AutoServiceManager
         }
 
         private void btnAddCar_Click(object sender, EventArgs e)
+        {
+            if (dataGridClients.CurrentRow == null)
             {
-                if (dataGridClients.CurrentRow == null)
-                {
-                    MessageBox.Show("Select client");
-    
-                    return;
-                }
-    
-                if (txtBrand.Text == "" || txtModel.Text == "" || txtPlate.Text == "")
-                {
-                    MessageBox.Show("Enter data");
-    
-                    return;
-                }
-    
-                Client client = (Client)dataGridClients.CurrentRow.DataBoundItem;
-    
-                Car car = new Car
-                {
-                    Brand = txtBrand.Text,
-                    Model = txtModel.Text,
-                    PlateNumber = txtPlate.Text
-                };
-    
-                client.Cars.Add(car);
-    
-                RefreshCars(client);
+                MessageBox.Show("Select client");
+
+                return;
+            }
+
+            if (txtBrand.Text == "" || txtModel.Text == "" || txtPlate.Text == "")
+            {
+                MessageBox.Show("Enter data");
+
+                return;
+            }
+
+            Client client = (Client)dataGridClients.CurrentRow.DataBoundItem;
+
+            Car car = new Car
+            {
+                Brand = txtBrand.Text,
+                Model = txtModel.Text,
+                PlateNumber = txtPlate.Text
+            };
+
+            client.Cars.Add(car);
+
+            RefreshCars(client);
             MessageBox.Show($"Додано! Зараз у клієнта  авто");
-                txtBrand.Clear();
-                txtModel.Clear();
-                txtPlate.Clear();
+            txtBrand.Clear();
+            txtModel.Clear();
+            txtPlate.Clear();
         }
+
+        void RefreshOrders(Car? car)
+        {
+            if (car == null) return;
+            dataGridOrders.DataSource = null;
+            dataGridOrders.DataSource = car.Orders;
+
+            dataGridOrders.Refresh(); 
+        }
+
+        private void dataGridCars_SelectionChanged(object sender, EventArgs e)
+        {
+            if (dataGridCars.CurrentRow == null)
+                return;
+
+            Car car = (Car)dataGridCars.CurrentRow.DataBoundItem;
+
+            RefreshOrders(car);
+        }
+
+        private void btnAddOrder_Click(object sender, EventArgs e)
+        {
+
+            if (txtPrice.Text == "" || cmbServiceType.Text == "")
+            {
+                MessageBox.Show("Enter data");
+                return;
+            }
+
+            if (dataGridCars.CurrentRow?.DataBoundItem == null)
+                return;
+
+            Car car = (Car)dataGridCars.CurrentRow.DataBoundItem;
+
+            Service service;
+
+            if (cmbServiceType.Text.Contains("Repair"))
+            {
+                service = new RepairService
+                {
+                    Name = "Repair",
+                    Type = "Repair", 
+                    BasePrice = decimal.Parse(txtPrice.Text),
+                    Hours = int.Parse(txtHours.Text)
+                };
+            }
+            else
+            {
+                service = new MaintenanceService
+                {
+                    Name = "Maintenance",
+                    Type = "Maintenance", 
+                    BasePrice = decimal.Parse(txtPrice.Text)
+                };
+            }
+
+            Order order = new Order
+            {
+                Id = car.Orders.Count + 1,
+                Date = DateTime.Now,
+                Service = service
+            };
+
+            car.Orders.Add(order);
+
+            RefreshOrders(car);
+
+            txtPrice.Clear();
+            txtHours.Clear();
+        }
+
+
+
     }
 }
