@@ -60,14 +60,15 @@
             // 
             // dataGridClients
             // 
+            dataGridClients.AllowUserToAddRows = false;
             dataGridClients.BackgroundColor = SystemColors.ActiveCaption;
             dataGridClients.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            dataGridClients.Dock = DockStyle.Top;
             dataGridClients.Location = new Point(0, 0);
             dataGridClients.Name = "dataGridClients";
-            dataGridClients.Size = new Size(1039, 200);
+            dataGridClients.Size = new Size(269, 200);
             dataGridClients.TabIndex = 0;
             dataGridClients.CellContentClick += dataGridClients_CellContentClick;
+            dataGridClients.SelectionChanged += dataGridClients_SelectionChanged;
             // 
             // btnAddClient
             // 
@@ -149,30 +150,32 @@
             // 
             // dataGridCars
             // 
+            dataGridCars.AllowUserToAddRows = false;
             dataGridCars.BackgroundColor = SystemColors.ActiveCaption;
             dataGridCars.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            dataGridCars.Location = new Point(344, 0);
+            dataGridCars.Location = new Point(268, 0);
             dataGridCars.Name = "dataGridCars";
-            dataGridCars.Size = new Size(359, 200);
+            dataGridCars.Size = new Size(334, 200);
             dataGridCars.TabIndex = 9;
+            dataGridCars.SelectionChanged += dataGridCars_SelectionChanged;
             // 
             // txtModel
             // 
-            txtModel.Location = new Point(344, 235);
+            txtModel.Location = new Point(274, 235);
             txtModel.Name = "txtModel";
             txtModel.Size = new Size(145, 23);
             txtModel.TabIndex = 10;
             // 
             // txtBrand
             // 
-            txtBrand.Location = new Point(344, 206);
+            txtBrand.Location = new Point(274, 206);
             txtBrand.Name = "txtBrand";
             txtBrand.Size = new Size(145, 23);
             txtBrand.TabIndex = 11;
             // 
             // txtPlate
             // 
-            txtPlate.Location = new Point(344, 264);
+            txtPlate.Location = new Point(274, 264);
             txtPlate.Name = "txtPlate";
             txtPlate.Size = new Size(145, 23);
             txtPlate.TabIndex = 12;
@@ -180,7 +183,7 @@
             // btnAddCar
             // 
             btnAddCar.Cursor = Cursors.Hand;
-            btnAddCar.Location = new Point(344, 296);
+            btnAddCar.Location = new Point(274, 296);
             btnAddCar.Name = "btnAddCar";
             btnAddCar.Size = new Size(75, 23);
             btnAddCar.TabIndex = 13;
@@ -191,7 +194,7 @@
             // lblBrand
             // 
             lblBrand.AutoSize = true;
-            lblBrand.Location = new Point(495, 214);
+            lblBrand.Location = new Point(425, 211);
             lblBrand.Name = "lblBrand";
             lblBrand.Size = new Size(38, 15);
             lblBrand.TabIndex = 14;
@@ -200,7 +203,7 @@
             // lblModel
             // 
             lblModel.AutoSize = true;
-            lblModel.Location = new Point(495, 241);
+            lblModel.Location = new Point(425, 238);
             lblModel.Name = "lblModel";
             lblModel.Size = new Size(41, 15);
             lblModel.TabIndex = 15;
@@ -210,7 +213,7 @@
             // 
             lblPlate.AutoSize = true;
             lblPlate.ForeColor = SystemColors.InfoText;
-            lblPlate.Location = new Point(495, 267);
+            lblPlate.Location = new Point(425, 267);
             lblPlate.Name = "lblPlate";
             lblPlate.Size = new Size(80, 15);
             lblPlate.TabIndex = 16;
@@ -220,15 +223,15 @@
             // 
             dataGridOrders.BackgroundColor = SystemColors.ActiveCaption;
             dataGridOrders.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            dataGridOrders.Location = new Point(700, 0);
+            dataGridOrders.Location = new Point(600, 0);
             dataGridOrders.Name = "dataGridOrders";
-            dataGridOrders.Size = new Size(339, 200);
+            dataGridOrders.Size = new Size(441, 200);
             dataGridOrders.TabIndex = 17;
             // 
             // lblServiceType
             // 
             lblServiceType.AutoSize = true;
-            lblServiceType.Location = new Point(827, 211);
+            lblServiceType.Location = new Point(736, 211);
             lblServiceType.Name = "lblServiceType";
             lblServiceType.Size = new Size(71, 15);
             lblServiceType.TabIndex = 18;
@@ -238,7 +241,7 @@
             // 
             cmbServiceType.FormattingEnabled = true;
             cmbServiceType.Items.AddRange(new object[] { "Repair", "Maintenance" });
-            cmbServiceType.Location = new Point(700, 206);
+            cmbServiceType.Location = new Point(609, 206);
             cmbServiceType.Name = "cmbServiceType";
             cmbServiceType.Size = new Size(121, 23);
             cmbServiceType.TabIndex = 19;
@@ -246,7 +249,7 @@
             // lblBasePrice
             // 
             lblBasePrice.AutoSize = true;
-            lblBasePrice.Location = new Point(851, 238);
+            lblBasePrice.Location = new Point(760, 241);
             lblBasePrice.Name = "lblBasePrice";
             lblBasePrice.Size = new Size(60, 15);
             lblBasePrice.TabIndex = 20;
@@ -254,14 +257,14 @@
             // 
             // txtPrice
             // 
-            txtPrice.Location = new Point(700, 235);
+            txtPrice.Location = new Point(609, 235);
             txtPrice.Name = "txtPrice";
             txtPrice.Size = new Size(145, 23);
             txtPrice.TabIndex = 21;
             // 
             // txtHours
             // 
-            txtHours.Location = new Point(700, 264);
+            txtHours.Location = new Point(609, 264);
             txtHours.Name = "txtHours";
             txtHours.Size = new Size(145, 23);
             txtHours.TabIndex = 22;
@@ -269,7 +272,7 @@
             // lblHours
             // 
             lblHours.AutoSize = true;
-            lblHours.Location = new Point(851, 267);
+            lblHours.Location = new Point(760, 272);
             lblHours.Name = "lblHours";
             lblHours.Size = new Size(39, 15);
             lblHours.TabIndex = 23;
@@ -278,7 +281,7 @@
             // btnAddOrder
             // 
             btnAddOrder.Cursor = Cursors.Hand;
-            btnAddOrder.Location = new Point(700, 296);
+            btnAddOrder.Location = new Point(609, 296);
             btnAddOrder.Name = "btnAddOrder";
             btnAddOrder.Size = new Size(75, 23);
             btnAddOrder.TabIndex = 24;
@@ -291,7 +294,7 @@
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = Color.SlateGray;
-            ClientSize = new Size(1039, 469);
+            ClientSize = new Size(1042, 469);
             Controls.Add(btnAddOrder);
             Controls.Add(lblHours);
             Controls.Add(txtHours);

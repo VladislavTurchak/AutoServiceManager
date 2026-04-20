@@ -19,6 +19,11 @@ namespace AutoServiceManager.Models
         // Базова ціна послуги
         public decimal BasePrice { get; set; }
 
+        public override string ToString()
+        {
+            return Name;
+        }
+
         // Абстрактний метод розрахунку ціни
         // Кожен нащадок повинен реалізувати його по-своєму
         public abstract decimal CalculatePrice();

@@ -8,9 +8,18 @@ namespace AutoServiceManager
         [STAThread]
         static void Main()
         {
-            // To customize application configuration such as set high DPI settings or default font,
-            // see https://aka.ms/applicationconfiguration.
             ApplicationConfiguration.Initialize();
+
+            Application.ThreadException += (s, e) =>
+            {
+                System.Diagnostics.Debug.WriteLine("ThreadException: " + e.Exception);
+                MessageBox.Show(e.Exception.ToString(), "ThreadException");
+            };
+            AppDomain.CurrentDomain.UnhandledException += (s, e) =>
+            {
+                System.Diagnostics.Debug.WriteLine("UnhandledException: " + e.ExceptionObject);
+            };
+
             Application.Run(new Form1());
         }
     }

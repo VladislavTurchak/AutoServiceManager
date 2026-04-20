@@ -11,11 +11,43 @@ namespace AutoServiceManager
     // Form1.Designer.cs (інтерфейс)
     public partial class Form1 : Form
     {
+
+        bool isLoading = false;
         // Конструктор форми
         // Викликається при запуску програми
         public Form1()
         {
-            InitializeComponent(); // створює всі кнопки та елементи GUI
+            try
+            {
+                InitializeComponent();
+            }
+            catch (Exception ex)
+            {
+                // Покажіть стек і ключеві значення для діагностики
+                string info = $"Exception in InitializeComponent: {ex}\n" +
+                              $"fileManager.Clients count: {fileManager?.Clients?.Count}\n";
+                System.Diagnostics.Debug.WriteLine(info);
+                MessageBox.Show(info, "Init exception", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                throw;
+            }
+
+            isLoading = true; // блокируем обработчики на время инициализации
+
+            // Отключаем события, которые могли быть присоединены в InitializeComponent,
+            // чтобы безопасно установить DataSource и начальное состояние.
+            dataGridClients.SelectionChanged -= dataGridClients_SelectionChanged;
+            dataGridCars.SelectionChanged -= dataGridCars_SelectionChanged;
+            dataGridClients.CellContentClick -= dataGridClients_CellContentClick;
+
+            // Инициализация данных / начальная загрузка (если нужна)
+            RefreshClients();
+
+            // Восстановление подписок
+            dataGridClients.SelectionChanged += dataGridClients_SelectionChanged;
+            dataGridCars.SelectionChanged += dataGridCars_SelectionChanged;
+            dataGridClients.CellContentClick += dataGridClients_CellContentClick;
+
+            isLoading = false;
         }
 
         // Об'єкт який відповідає за збереження та завантаження даних
@@ -53,6 +85,14 @@ namespace AutoServiceManager
 
             // Додаємо клієнта у список
             fileManager.Clients.Add(client);
+
+            RefreshClients();
+
+            if (dataGridClients.Rows.Count > 0)
+            {
+                dataGridClients.ClearSelection();
+                dataGridClients.Rows[dataGridClients.Rows.Count - 1].Selected = true;
+            }
 
             // Оновлюємо таблицю
             RefreshClients();
@@ -108,8 +148,10 @@ namespace AutoServiceManager
         {
             if (client == null) return;
 
+            isLoading = true;
             dataGridCars.DataSource = null;
             dataGridCars.DataSource = client.Cars;
+            isLoading = false;
         }
 
         private void dataGridClients_CellContentClick(object sender, DataGridViewCellEventArgs e)
@@ -150,7 +192,14 @@ namespace AutoServiceManager
             client.Cars.Add(car);
 
             RefreshCars(client);
-            MessageBox.Show($"Додано! Зараз у клієнта  авто");
+
+            if (dataGridCars.Rows.Count > 0)
+            {
+                dataGridCars.ClearSelection();
+                dataGridCars.Rows[dataGridCars.Rows.Count - 1].Selected = true;
+            }
+
+            RefreshCars(client);
             txtBrand.Clear();
             txtModel.Clear();
             txtPlate.Clear();
@@ -159,21 +208,15 @@ namespace AutoServiceManager
         void RefreshOrders(Car? car)
         {
             if (car == null) return;
+
+            isLoading = true;
             dataGridOrders.DataSource = null;
             dataGridOrders.DataSource = car.Orders;
+            isLoading = false;
 
-            dataGridOrders.Refresh(); 
+            dataGridOrders.Refresh();
         }
 
-        private void dataGridCars_SelectionChanged(object sender, EventArgs e)
-        {
-            if (dataGridCars.CurrentRow == null)
-                return;
-
-            Car car = (Car)dataGridCars.CurrentRow.DataBoundItem;
-
-            RefreshOrders(car);
-        }
 
         private void btnAddOrder_Click(object sender, EventArgs e)
         {
@@ -196,7 +239,7 @@ namespace AutoServiceManager
                 service = new RepairService
                 {
                     Name = "Repair",
-                    Type = "Repair", 
+                    Type = "Repair",
                     BasePrice = decimal.Parse(txtPrice.Text),
                     Hours = int.Parse(txtHours.Text)
                 };
@@ -206,7 +249,7 @@ namespace AutoServiceManager
                 service = new MaintenanceService
                 {
                     Name = "Maintenance",
-                    Type = "Maintenance", 
+                    Type = "Maintenance",
                     BasePrice = decimal.Parse(txtPrice.Text)
                 };
             }
@@ -226,7 +269,28 @@ namespace AutoServiceManager
             txtHours.Clear();
         }
 
+        private void dataGridClients_SelectionChanged(object sender, EventArgs e)
+        {
+            if (dataGridClients.CurrentRow == null || dataGridClients.CurrentRow.Index < 0)
+                return;
 
+            if (dataGridClients.CurrentRow?.DataBoundItem is not Client client)
+                return;
 
+            RefreshCars(client);
+            dataGridOrders.DataSource = null;
+        }
+
+        private void dataGridCars_SelectionChanged(object sender, EventArgs e)
+        {
+            if (isLoading) return;
+
+            if (dataGridCars.CurrentRow?.DataBoundItem is not Car car)
+                return;
+
+            RefreshOrders(car);
+        }
+
+    
     }
 }
