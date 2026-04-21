@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.ComponentModel;
 
 namespace AutoServiceManager.Models
 {
@@ -25,6 +26,6 @@ namespace AutoServiceManager.Models
 
         // Список автомобілів клієнта
         // Це агрегація: клієнт має автомобілі
-        public List<Car> Cars { get; set; } = new List<Car>();
+        public BindingList<Car> Cars { get; set; } = new BindingList<Car>();
     }
 }

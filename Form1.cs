@@ -1,5 +1,6 @@
 ﻿using AutoServiceManager.Data;
 using AutoServiceManager.Models;
+using System.ComponentModel;
 
 namespace AutoServiceManager
 {
@@ -10,16 +11,31 @@ namespace AutoServiceManager
 
         public Form1()
         {
-            isLoading = true;        // 🔥 блокуємо ВСІ події
+            isLoading = true;
 
-            InitializeComponent();  // створення UI
+            InitializeComponent();
 
-            // 🔥 важливо — до першого використання DataGrid
+            // ❌ ВІДКЛЮЧАЄМО події
+            dataGridClients.SelectionChanged -= dataGridClients_SelectionChanged;
+            dataGridCars.SelectionChanged -= dataGridCars_SelectionChanged;
+
+            // налаштування таблиць
             dataGridClients.AllowUserToAddRows = false;
             dataGridCars.AllowUserToAddRows = false;
             dataGridOrders.AllowUserToAddRows = false;
 
-            isLoading = false;      // 🔥 тепер можна працювати
+            // можна навіть почистити
+            dataGridClients.DataSource = null;
+            dataGridCars.DataSource = null;
+            dataGridOrders.DataSource = null;
+
+            dataGridCars.MultiSelect = false;
+            dataGridClients.MultiSelect = false;
+            // ✅ ВКЛЮЧАЄМО назад
+            dataGridClients.SelectionChanged += dataGridClients_SelectionChanged;
+            dataGridCars.SelectionChanged += dataGridCars_SelectionChanged;
+
+            isLoading = false;
         }
 
         // менеджер для роботи з файлом
@@ -54,10 +70,12 @@ namespace AutoServiceManager
             RefreshClients();
 
             // автоматично вибираємо нового клієнта
-            if (dataGridClients.Rows.Count > 0)
+            int index = dataGridClients.Rows.Count - 1;
+
+            if (index >= 0)
             {
                 dataGridClients.ClearSelection();
-                dataGridClients.Rows[dataGridClients.Rows.Count - 1].Selected = true;
+                dataGridClients.Rows[index].Selected = true;
             }
 
             txtName.Clear();
@@ -121,10 +139,12 @@ namespace AutoServiceManager
             RefreshCars(client);
 
             // вибираємо нову машину
-            if (dataGridCars.Rows.Count > 0)
+            int index = dataGridCars.Rows.Count - 1;
+
+            if (index >= 0)
             {
                 dataGridCars.ClearSelection();
-                dataGridCars.Rows[dataGridCars.Rows.Count - 1].Selected = true;
+                dataGridCars.Rows[index].Selected = true;
             }
 
             txtBrand.Clear();
@@ -137,17 +157,16 @@ namespace AutoServiceManager
         {
             if (car == null) return;
 
-            try
-            {
-                isLoading = true;
+            // 🔥 ФІКС
+            if (car.Orders == null)
+                car.Orders = new BindingList<Order>();
 
-                dataGridOrders.DataSource = null;
-                dataGridOrders.DataSource = car.Orders;
-            }
-            finally
-            {
-                isLoading = false; // 🔥 гарантовано вимкнеться
-            }
+            isLoading = true;
+
+            dataGridOrders.DataSource = null;
+            dataGridOrders.DataSource = car.Orders;
+
+            isLoading = false;
         }
 
         // ➕ ДОДАТИ ЗАМОВЛЕННЯ
@@ -207,38 +226,32 @@ namespace AutoServiceManager
         {
             if (isLoading) return;
 
-            if (dataGridClients.Rows.Count == 0)
+            if (dataGridClients.SelectedRows.Count == 0)
                 return;
 
-            if (dataGridClients.CurrentRow == null)
-                return;
+            var row = dataGridClients.SelectedRows[0];
 
-            if (dataGridClients.CurrentRow.Index < 0)
-                return;
-
-            if (dataGridClients.CurrentRow.DataBoundItem is not Client client)
+            if (row.DataBoundItem is not Client client)
                 return;
 
             RefreshCars(client);
             dataGridOrders.DataSource = null;
         }
+        
 
         // 🔁 зміна машини
         private void dataGridCars_SelectionChanged(object sender, EventArgs e)
         {
             if (isLoading) return;
 
-            if (dataGridCars.Rows.Count == 0)
+            if (dataGridCars.SelectedRows.Count == 0)
                 return;
 
-            if (dataGridCars.CurrentRow == null)
+            var row = dataGridCars.SelectedRows[0];
+
+            if (row.DataBoundItem is not Car car)
                 return;
 
-            if (dataGridCars.CurrentRow.Index < 0)
-                return;
-
-            if (dataGridCars.CurrentRow.DataBoundItem is not Car car)
-                return;
 
             RefreshOrders(car);
         }
