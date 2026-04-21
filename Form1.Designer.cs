@@ -67,7 +67,6 @@
             dataGridClients.Name = "dataGridClients";
             dataGridClients.Size = new Size(269, 200);
             dataGridClients.TabIndex = 0;
-            dataGridClients.CellContentClick += dataGridClients_CellContentClick;
             dataGridClients.SelectionChanged += dataGridClients_SelectionChanged;
             // 
             // btnAddClient
@@ -114,7 +113,6 @@
             btnRefresh.TabIndex = 4;
             btnRefresh.Text = "Refresh";
             btnRefresh.UseVisualStyleBackColor = true;
-            btnRefresh.Click += btnRefresh_Click;
             // 
             // lblName
             // 
