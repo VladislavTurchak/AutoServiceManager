@@ -48,6 +48,8 @@ namespace AutoServiceManager
         {
             dataGridClients.DataSource = null;
             dataGridClients.DataSource = fileManager.Clients;
+            if (dataGridClients.Rows.Count > 0) 
+    dataGridClients_SelectionChanged(this, EventArgs.Empty);
         }
 
         // ➕ ДОДАТИ КЛІЄНТА
@@ -92,22 +94,30 @@ namespace AutoServiceManager
         private void btnLoad_Click(object sender, EventArgs e)
         {
             fileManager.Load("data.json");
-
             RefreshClients();
 
-            dataGridCars.DataSource = null;
-            dataGridOrders.DataSource = null;
+            // ПРИМУСОВО вибираємо першого клієнта після завантаження
+            if (dataGridClients.Rows.Count > 0)
+            {
+                isLoading = false; // переконайтесь, що прапорець дозволяє події
+                dataGridClients.Rows[0].Selected = true;
+
+                // Викликаємо метод оновлення вручну, якщо подія не спрацювала
+                var firstClient = (Client)dataGridClients.Rows[0].DataBoundItem;
+                RefreshCars(firstClient);
+            }
         }
 
         // оновлення машин
         void RefreshCars(Client? client)
         {
-            if (client == null) return;
-
-            isLoading = true;
-
+            isLoading = true; // Блокуємо зайві події
             dataGridCars.DataSource = null;
-            dataGridCars.DataSource = client.Cars;
+
+            if (client != null && client.Cars != null)
+            {
+                dataGridCars.DataSource = client.Cars;
+            }
 
             isLoading = false;
         }
@@ -226,34 +236,38 @@ namespace AutoServiceManager
         {
             if (isLoading) return;
 
-            if (dataGridClients.SelectedRows.Count == 0)
-                return;
+            // Отримуємо поточний вибраний об'єкт клієнта
+            if (dataGridClients.CurrentRow?.DataBoundItem is Client selectedClient)
+            {
+                RefreshCars(selectedClient);
 
-            var row = dataGridClients.SelectedRows[0];
+                // Одразу після зміни клієнта і завантаження машин — 
+                // скидаємо таблицю замовлень, бо машину ще не вибрано
+                dataGridOrders.DataSource = null;
 
-            if (row.DataBoundItem is not Client client)
-                return;
-
-            RefreshCars(client);
-            dataGridOrders.DataSource = null;
+                // Автоматично вибираємо першу машину клієнта, щоб замовлення теж підтягнулися
+                if (dataGridCars.Rows.Count > 0)
+                {
+                    dataGridCars.CurrentCell = dataGridCars.Rows[0].Cells[0];
+                }
+            }
         }
-        
+
 
         // 🔁 зміна машини
         private void dataGridCars_SelectionChanged(object sender, EventArgs e)
         {
             if (isLoading) return;
 
-            if (dataGridCars.SelectedRows.Count == 0)
-                return;
-
-            var row = dataGridCars.SelectedRows[0];
-
-            if (row.DataBoundItem is not Car car)
-                return;
-
-
-            RefreshOrders(car);
+            // Отримуємо поточний вибраний об'єкт машини
+            if (dataGridCars.CurrentRow?.DataBoundItem is Car selectedCar)
+            {
+                RefreshOrders(selectedCar);
+            }
+            else
+            {
+                dataGridOrders.DataSource = null;
+            }
         }
     }
 }
