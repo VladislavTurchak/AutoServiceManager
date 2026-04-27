@@ -1,6 +1,7 @@
 ﻿using AutoServiceManager.Data;
 using AutoServiceManager.Models;
 using System.ComponentModel;
+using System.IO;
 
 namespace AutoServiceManager
 {
@@ -14,6 +15,13 @@ namespace AutoServiceManager
             isLoading = true;
 
             InitializeComponent();
+
+            if (File.Exists("data.json"))
+            {
+                fileManager.Load("data.json");
+                RefreshClients();
+            }
+
 
             //  ВІДКЛЮЧАЄМО події
             dataGridClients.SelectionChanged -= dataGridClients_SelectionChanged;
@@ -36,6 +44,13 @@ namespace AutoServiceManager
             dataGridCars.SelectionChanged += dataGridCars_SelectionChanged;
 
             isLoading = false;
+
+            if (File.Exists("data.json"))
+            {
+                fileManager.Load("data.json");
+                RefreshClients();
+            }
+
         }
 
         // менеджер для роботи з файлом
@@ -47,8 +62,8 @@ namespace AutoServiceManager
         {
             dataGridClients.DataSource = null;
             dataGridClients.DataSource = fileManager.Clients;
-            if (dataGridClients.Rows.Count > 0) 
-    dataGridClients_SelectionChanged(this, EventArgs.Empty);
+            if (dataGridClients.Rows.Count > 0)
+                dataGridClients_SelectionChanged(this, EventArgs.Empty);
         }
 
         //  ДОДАТИ КЛІЄНТА
@@ -83,6 +98,26 @@ namespace AutoServiceManager
             txtPhone.Clear();
         }
 
+        // Delete client
+        private void btnDeleteClient_Click(object sender, EventArgs e)
+        {
+            if (dataGridClients.CurrentRow?.DataBoundItem is not Client client)
+                return;
+
+            DialogResult result = MessageBox.Show(
+            "Delete selected client?",
+            "Confirm",
+            MessageBoxButtons.YesNo);
+
+            if (result != DialogResult.Yes)
+                return;
+
+            fileManager.Clients.Remove(client);
+
+            RefreshClients();
+            dataGridCars.DataSource = null;
+            dataGridOrders.DataSource = null;
+        }
         // SAVE
         private void btnSave_Click(object sender, EventArgs e)
         {
@@ -163,12 +198,35 @@ namespace AutoServiceManager
             txtPlate.Clear();
         }
 
+        //Delete car
+        private void btnDeleteCar_Click(object sender, EventArgs e)
+        {
+            if (dataGridClients.CurrentRow?.DataBoundItem is not Client client)
+                return;
+
+            if (dataGridCars.CurrentRow?.DataBoundItem is not Car car)
+                return;
+
+            DialogResult result = MessageBox.Show(
+           "Delete selected car?",
+           "Confirm",
+            MessageBoxButtons.YesNo);
+
+            if (result != DialogResult.Yes)
+                return;
+
+            client.Cars.Remove(car);
+
+            RefreshCars(client);
+            dataGridOrders.DataSource = null;
+        }
+
         // оновлення замовлень
         void RefreshOrders(Car? car)
         {
             if (car == null) return;
 
-            
+
             if (car.Orders == null)
                 car.Orders = new BindingList<Order>();
 
@@ -232,6 +290,29 @@ namespace AutoServiceManager
             txtHours.Clear();
         }
 
+        // Delete order
+        private void btnDeleteOrder_Click(object sender, EventArgs e)
+        {
+            if (dataGridCars.CurrentRow?.DataBoundItem is not Car car)
+                return;
+
+            if (dataGridOrders.CurrentRow?.DataBoundItem is not Order order)
+                return;
+
+            DialogResult result = MessageBox.Show(
+           "Delete selected order?",
+           "Confirm",
+           MessageBoxButtons.YesNo);
+
+            if (result != DialogResult.Yes)
+                return;
+
+
+            car.Orders.Remove(order);
+
+            RefreshOrders(car);
+        }
+
         //  зміна клієнта
         private void dataGridClients_SelectionChanged(object? sender, EventArgs e)
         {
@@ -288,5 +369,25 @@ namespace AutoServiceManager
             RefreshClients();
             txtSearch.Clear();
         }
+
+        private void Form1_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            DialogResult result = MessageBox.Show(
+                "Do you want to save changes?",
+                "Exit",
+                MessageBoxButtons.YesNoCancel,
+                MessageBoxIcon.Question);
+
+            if (result == DialogResult.Yes)
+            {
+                fileManager.Save("data.json");
+            }
+            else if (result == DialogResult.Cancel)
+            {
+                e.Cancel = true; // скасувати закриття
+            }
+        }
+
+      
     }
 }
