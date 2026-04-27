@@ -53,6 +53,9 @@
             txtHours = new TextBox();
             lblHours = new Label();
             btnAddOrder = new Button();
+            txtSearch = new TextBox();
+            btnShowAll = new Button();
+            lblSearch = new Label();
             ((System.ComponentModel.ISupportInitialize)dataGridClients).BeginInit();
             ((System.ComponentModel.ISupportInitialize)dataGridCars).BeginInit();
             ((System.ComponentModel.ISupportInitialize)dataGridOrders).BeginInit();
@@ -61,10 +64,12 @@
             // dataGridClients
             // 
             dataGridClients.AllowUserToAddRows = false;
-            dataGridClients.BackgroundColor = SystemColors.ActiveCaption;
+            dataGridClients.BackgroundColor = SystemColors.ControlLightLight;
             dataGridClients.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            dataGridClients.GridColor = Color.LightGray;
             dataGridClients.Location = new Point(0, 0);
             dataGridClients.Name = "dataGridClients";
+            dataGridClients.ReadOnly = true;
             dataGridClients.Size = new Size(269, 200);
             dataGridClients.TabIndex = 0;
             dataGridClients.SelectionChanged += dataGridClients_SelectionChanged;
@@ -73,62 +78,80 @@
             // 
             btnAddClient.AccessibleDescription = "";
             btnAddClient.AccessibleName = "";
+            btnAddClient.BackColor = Color.SteelBlue;
             btnAddClient.Cursor = Cursors.Hand;
-            btnAddClient.Location = new Point(10, 276);
+            btnAddClient.FlatStyle = FlatStyle.Popup;
+            btnAddClient.Font = new Font("Segoe UI", 9.75F, FontStyle.Regular, GraphicsUnit.Point, 204);
+            btnAddClient.ForeColor = Color.White;
+            btnAddClient.Location = new Point(10, 269);
             btnAddClient.Name = "btnAddClient";
-            btnAddClient.Size = new Size(75, 23);
+            btnAddClient.Size = new Size(82, 31);
             btnAddClient.TabIndex = 1;
             btnAddClient.Text = "Add Client";
-            btnAddClient.UseVisualStyleBackColor = true;
+            btnAddClient.UseVisualStyleBackColor = false;
             btnAddClient.Click += btnAddClient_Click;
             // 
             // btnSave
             // 
+            btnSave.BackColor = Color.SteelBlue;
             btnSave.Cursor = Cursors.Hand;
-            btnSave.Location = new Point(91, 276);
+            btnSave.FlatStyle = FlatStyle.Popup;
+            btnSave.Font = new Font("Segoe UI", 10F);
+            btnSave.ForeColor = Color.White;
+            btnSave.Location = new Point(98, 269);
             btnSave.Name = "btnSave";
-            btnSave.Size = new Size(75, 23);
+            btnSave.Size = new Size(82, 31);
             btnSave.TabIndex = 2;
             btnSave.Text = "Save";
-            btnSave.UseVisualStyleBackColor = true;
+            btnSave.UseVisualStyleBackColor = false;
             btnSave.Click += btnSave_Click;
             // 
             // btnLoad
             // 
+            btnLoad.BackColor = Color.SteelBlue;
             btnLoad.Cursor = Cursors.Hand;
+            btnLoad.FlatStyle = FlatStyle.Popup;
+            btnLoad.Font = new Font("Segoe UI", 10F);
+            btnLoad.ForeColor = Color.White;
             btnLoad.Location = new Point(10, 305);
             btnLoad.Name = "btnLoad";
-            btnLoad.Size = new Size(75, 23);
+            btnLoad.Size = new Size(82, 31);
             btnLoad.TabIndex = 3;
             btnLoad.Text = "Load";
-            btnLoad.UseVisualStyleBackColor = true;
+            btnLoad.UseVisualStyleBackColor = false;
             btnLoad.Click += btnLoad_Click;
             // 
             // btnRefresh
             // 
+            btnRefresh.BackColor = Color.SteelBlue;
             btnRefresh.Cursor = Cursors.Hand;
-            btnRefresh.Location = new Point(91, 305);
+            btnRefresh.FlatStyle = FlatStyle.Popup;
+            btnRefresh.Font = new Font("Segoe UI", 10F);
+            btnRefresh.ForeColor = Color.White;
+            btnRefresh.Location = new Point(98, 305);
             btnRefresh.Name = "btnRefresh";
-            btnRefresh.Size = new Size(75, 23);
+            btnRefresh.Size = new Size(82, 31);
             btnRefresh.TabIndex = 4;
             btnRefresh.Text = "Refresh";
-            btnRefresh.UseVisualStyleBackColor = true;
+            btnRefresh.UseVisualStyleBackColor = false;
             // 
             // lblName
             // 
             lblName.AutoSize = true;
-            lblName.Location = new Point(161, 211);
+            lblName.Font = new Font("Segoe UI", 10F);
+            lblName.Location = new Point(161, 210);
             lblName.Name = "lblName";
-            lblName.Size = new Size(39, 15);
+            lblName.Size = new Size(45, 19);
             lblName.TabIndex = 5;
             lblName.Text = "Name";
             // 
             // lblPhone
             // 
             lblPhone.AutoSize = true;
-            lblPhone.Location = new Point(161, 241);
+            lblPhone.Font = new Font("Segoe UI", 10F);
+            lblPhone.Location = new Point(161, 238);
             lblPhone.Name = "lblPhone";
-            lblPhone.Size = new Size(41, 15);
+            lblPhone.Size = new Size(48, 19);
             lblPhone.TabIndex = 6;
             lblPhone.Text = "Phone";
             // 
@@ -149,10 +172,12 @@
             // dataGridCars
             // 
             dataGridCars.AllowUserToAddRows = false;
-            dataGridCars.BackgroundColor = SystemColors.ActiveCaption;
+            dataGridCars.BackgroundColor = SystemColors.ControlLightLight;
             dataGridCars.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            dataGridCars.GridColor = Color.LightGray;
             dataGridCars.Location = new Point(268, 0);
             dataGridCars.Name = "dataGridCars";
+            dataGridCars.ReadOnly = true;
             dataGridCars.Size = new Size(334, 200);
             dataGridCars.TabIndex = 9;
             dataGridCars.SelectionChanged += dataGridCars_SelectionChanged;
@@ -180,58 +205,68 @@
             // 
             // btnAddCar
             // 
+            btnAddCar.BackColor = Color.SteelBlue;
             btnAddCar.Cursor = Cursors.Hand;
-            btnAddCar.Location = new Point(274, 296);
+            btnAddCar.FlatStyle = FlatStyle.Popup;
+            btnAddCar.Font = new Font("Segoe UI", 10F);
+            btnAddCar.ForeColor = Color.White;
+            btnAddCar.Location = new Point(274, 293);
             btnAddCar.Name = "btnAddCar";
-            btnAddCar.Size = new Size(75, 23);
+            btnAddCar.Size = new Size(82, 31);
             btnAddCar.TabIndex = 13;
             btnAddCar.Text = "Add Car";
-            btnAddCar.UseVisualStyleBackColor = true;
+            btnAddCar.UseVisualStyleBackColor = false;
             btnAddCar.Click += btnAddCar_Click;
             // 
             // lblBrand
             // 
             lblBrand.AutoSize = true;
+            lblBrand.Font = new Font("Segoe UI", 10F);
             lblBrand.Location = new Point(425, 211);
             lblBrand.Name = "lblBrand";
-            lblBrand.Size = new Size(38, 15);
+            lblBrand.Size = new Size(45, 19);
             lblBrand.TabIndex = 14;
             lblBrand.Text = "Brand";
             // 
             // lblModel
             // 
             lblModel.AutoSize = true;
+            lblModel.Font = new Font("Segoe UI", 10F);
             lblModel.Location = new Point(425, 238);
             lblModel.Name = "lblModel";
-            lblModel.Size = new Size(41, 15);
+            lblModel.Size = new Size(48, 19);
             lblModel.TabIndex = 15;
             lblModel.Text = "Model";
             // 
             // lblPlate
             // 
             lblPlate.AutoSize = true;
+            lblPlate.Font = new Font("Segoe UI", 10F);
             lblPlate.ForeColor = SystemColors.InfoText;
             lblPlate.Location = new Point(425, 267);
             lblPlate.Name = "lblPlate";
-            lblPlate.Size = new Size(80, 15);
+            lblPlate.Size = new Size(93, 19);
             lblPlate.TabIndex = 16;
             lblPlate.Text = "Plate Number";
             // 
             // dataGridOrders
             // 
-            dataGridOrders.BackgroundColor = SystemColors.ActiveCaption;
+            dataGridOrders.BackgroundColor = SystemColors.ControlLightLight;
             dataGridOrders.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            dataGridOrders.GridColor = Color.LightGray;
             dataGridOrders.Location = new Point(600, 0);
             dataGridOrders.Name = "dataGridOrders";
+            dataGridOrders.ReadOnly = true;
             dataGridOrders.Size = new Size(441, 200);
             dataGridOrders.TabIndex = 17;
             // 
             // lblServiceType
             // 
             lblServiceType.AutoSize = true;
-            lblServiceType.Location = new Point(736, 211);
+            lblServiceType.Font = new Font("Segoe UI", 10F);
+            lblServiceType.Location = new Point(736, 207);
             lblServiceType.Name = "lblServiceType";
-            lblServiceType.Size = new Size(71, 15);
+            lblServiceType.Size = new Size(83, 19);
             lblServiceType.TabIndex = 18;
             lblServiceType.Text = "Service Type";
             // 
@@ -247,9 +282,10 @@
             // lblBasePrice
             // 
             lblBasePrice.AutoSize = true;
-            lblBasePrice.Location = new Point(760, 241);
+            lblBasePrice.Font = new Font("Segoe UI", 10F);
+            lblBasePrice.Location = new Point(760, 238);
             lblBasePrice.Name = "lblBasePrice";
-            lblBasePrice.Size = new Size(60, 15);
+            lblBasePrice.Size = new Size(70, 19);
             lblBasePrice.TabIndex = 20;
             lblBasePrice.Text = "Base Price";
             // 
@@ -270,29 +306,68 @@
             // lblHours
             // 
             lblHours.AutoSize = true;
-            lblHours.Location = new Point(760, 272);
+            lblHours.Font = new Font("Segoe UI", 10F);
+            lblHours.Location = new Point(760, 267);
             lblHours.Name = "lblHours";
-            lblHours.Size = new Size(39, 15);
+            lblHours.Size = new Size(46, 19);
             lblHours.TabIndex = 23;
             lblHours.Text = "Hours";
             // 
             // btnAddOrder
             // 
+            btnAddOrder.BackColor = Color.SteelBlue;
             btnAddOrder.Cursor = Cursors.Hand;
-            btnAddOrder.Location = new Point(609, 296);
+            btnAddOrder.FlatStyle = FlatStyle.Popup;
+            btnAddOrder.Font = new Font("Segoe UI", 10F);
+            btnAddOrder.ForeColor = Color.White;
+            btnAddOrder.Location = new Point(609, 293);
             btnAddOrder.Name = "btnAddOrder";
-            btnAddOrder.Size = new Size(75, 23);
+            btnAddOrder.Size = new Size(85, 31);
             btnAddOrder.TabIndex = 24;
             btnAddOrder.Text = "Add Order";
-            btnAddOrder.UseVisualStyleBackColor = true;
+            btnAddOrder.UseVisualStyleBackColor = false;
             btnAddOrder.Click += btnAddOrder_Click;
+            // 
+            // txtSearch
+            // 
+            txtSearch.Location = new Point(10, 363);
+            txtSearch.Name = "txtSearch";
+            txtSearch.Size = new Size(145, 23);
+            txtSearch.TabIndex = 25;
+            txtSearch.TextChanged += txtSearch_TextChanged;
+            // 
+            // btnShowAll
+            // 
+            btnShowAll.BackColor = Color.SteelBlue;
+            btnShowAll.FlatStyle = FlatStyle.Popup;
+            btnShowAll.ForeColor = Color.White;
+            btnShowAll.Location = new Point(10, 392);
+            btnShowAll.Name = "btnShowAll";
+            btnShowAll.Size = new Size(82, 27);
+            btnShowAll.TabIndex = 27;
+            btnShowAll.Text = "Show All";
+            btnShowAll.UseVisualStyleBackColor = false;
+            btnShowAll.Click += btnShowAll_Click;
+            // 
+            // lblSearch
+            // 
+            lblSearch.AutoSize = true;
+            lblSearch.Font = new Font("Segoe UI", 10F);
+            lblSearch.Location = new Point(161, 367);
+            lblSearch.Name = "lblSearch";
+            lblSearch.Size = new Size(28, 19);
+            lblSearch.TabIndex = 28;
+            lblSearch.Text = "🔍";
             // 
             // Form1
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            BackColor = Color.SlateGray;
+            BackColor = Color.WhiteSmoke;
             ClientSize = new Size(1042, 469);
+            Controls.Add(lblSearch);
+            Controls.Add(btnShowAll);
+            Controls.Add(txtSearch);
             Controls.Add(btnAddOrder);
             Controls.Add(lblHours);
             Controls.Add(txtHours);
@@ -319,7 +394,7 @@
             Controls.Add(btnAddClient);
             Controls.Add(dataGridClients);
             Name = "Form1";
-            Text = "Form1";
+            Text = "Auto Service Manager";
             ((System.ComponentModel.ISupportInitialize)dataGridClients).EndInit();
             ((System.ComponentModel.ISupportInitialize)dataGridCars).EndInit();
             ((System.ComponentModel.ISupportInitialize)dataGridOrders).EndInit();
@@ -354,5 +429,8 @@
         private TextBox txtHours;
         private Label lblHours;
         private Button btnAddOrder;
+        private TextBox txtSearch;
+        private Button btnShowAll;
+        private Label lblSearch;
     }
 }

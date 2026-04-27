@@ -15,7 +15,7 @@ namespace AutoServiceManager
 
             InitializeComponent();
 
-            // ❌ ВІДКЛЮЧАЄМО події
+            //  ВІДКЛЮЧАЄМО події
             dataGridClients.SelectionChanged -= dataGridClients_SelectionChanged;
             dataGridCars.SelectionChanged -= dataGridCars_SelectionChanged;
 
@@ -31,7 +31,7 @@ namespace AutoServiceManager
 
             dataGridCars.MultiSelect = false;
             dataGridClients.MultiSelect = false;
-            // ✅ ВКЛЮЧАЄМО назад
+            // ВКЛЮЧАЄМО назад
             dataGridClients.SelectionChanged += dataGridClients_SelectionChanged;
             dataGridCars.SelectionChanged += dataGridCars_SelectionChanged;
 
@@ -41,7 +41,6 @@ namespace AutoServiceManager
         // менеджер для роботи з файлом
         FileManager fileManager = new FileManager();
 
-        // 🔥 ClientService НЕ потрібен → прибрали
 
         // оновлення клієнтів
         void RefreshClients()
@@ -52,7 +51,7 @@ namespace AutoServiceManager
     dataGridClients_SelectionChanged(this, EventArgs.Empty);
         }
 
-        // ➕ ДОДАТИ КЛІЄНТА
+        //  ДОДАТИ КЛІЄНТА
         private void btnAddClient_Click(object sender, EventArgs e)
         {
             if (txtName.Text == "" || txtPhone.Text == "")
@@ -84,13 +83,13 @@ namespace AutoServiceManager
             txtPhone.Clear();
         }
 
-        // 💾 SAVE
+        // SAVE
         private void btnSave_Click(object sender, EventArgs e)
         {
             fileManager.Save("data.json");
         }
 
-        // 📂 LOAD
+        // LOAD
         private void btnLoad_Click(object sender, EventArgs e)
         {
             fileManager.Load("data.json");
@@ -103,8 +102,10 @@ namespace AutoServiceManager
                 dataGridClients.Rows[0].Selected = true;
 
                 // Викликаємо метод оновлення вручну, якщо подія не спрацювала
-                var firstClient = (Client)dataGridClients.Rows[0].DataBoundItem;
-                RefreshCars(firstClient);
+                if (dataGridClients.Rows[0].DataBoundItem is Client firstClient)
+                {
+                    RefreshCars(firstClient);
+                }
             }
         }
 
@@ -122,7 +123,7 @@ namespace AutoServiceManager
             isLoading = false;
         }
 
-        // ➕ ДОДАТИ МАШИНУ
+        // ДОДАТИ МАШИНУ
         private void btnAddCar_Click(object sender, EventArgs e)
         {
             if (dataGridClients.CurrentRow?.DataBoundItem is not Client client)
@@ -167,7 +168,7 @@ namespace AutoServiceManager
         {
             if (car == null) return;
 
-            // 🔥 ФІКС
+            
             if (car.Orders == null)
                 car.Orders = new BindingList<Order>();
 
@@ -179,7 +180,7 @@ namespace AutoServiceManager
             isLoading = false;
         }
 
-        // ➕ ДОДАТИ ЗАМОВЛЕННЯ
+        //  ДОДАТИ ЗАМОВЛЕННЯ
         private void btnAddOrder_Click(object sender, EventArgs e)
         {
             if (txtPrice.Text == "" || cmbServiceType.Text == "")
@@ -231,8 +232,8 @@ namespace AutoServiceManager
             txtHours.Clear();
         }
 
-        // 🔁 зміна клієнта
-        private void dataGridClients_SelectionChanged(object sender, EventArgs e)
+        //  зміна клієнта
+        private void dataGridClients_SelectionChanged(object? sender, EventArgs e)
         {
             if (isLoading) return;
 
@@ -254,8 +255,8 @@ namespace AutoServiceManager
         }
 
 
-        // 🔁 зміна машини
-        private void dataGridCars_SelectionChanged(object sender, EventArgs e)
+        //  зміна машини
+        private void dataGridCars_SelectionChanged(object? sender, EventArgs e)
         {
             if (isLoading) return;
 
@@ -268,6 +269,24 @@ namespace AutoServiceManager
             {
                 dataGridOrders.DataSource = null;
             }
+        }
+
+        private void txtSearch_TextChanged(object sender, EventArgs e)
+        {
+            string searchText = txtSearch.Text.ToLower();
+
+            var filtered = fileManager.Clients
+                .Where(c => c.Name.ToLower().Contains(searchText))
+                .ToList();
+
+            dataGridClients.DataSource = null;
+            dataGridClients.DataSource = filtered;
+        }
+
+        private void btnShowAll_Click(object sender, EventArgs e)
+        {
+            RefreshClients();
+            txtSearch.Clear();
         }
     }
 }
