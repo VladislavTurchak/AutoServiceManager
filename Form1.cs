@@ -94,8 +94,7 @@ namespace AutoServiceManager
                 dataGridClients.Rows[index].Selected = true;
             }
 
-            txtName.Clear();
-            txtPhone.Clear();
+            ClearClientFields();
         }
 
         // Delete client
@@ -193,9 +192,7 @@ namespace AutoServiceManager
                 dataGridCars.Rows[index].Selected = true;
             }
 
-            txtBrand.Clear();
-            txtModel.Clear();
-            txtPlate.Clear();
+            ClearCarFields();
         }
 
         //Delete car
@@ -253,16 +250,33 @@ namespace AutoServiceManager
                 return;
             }
 
+
             Service service;
+
+            bool isPriceValid = decimal.TryParse(txtPrice.Text, out decimal price);
+            bool isHoursValid = int.TryParse(txtHours.Text, out int hours);
+
+            if (!isPriceValid)
+            {
+                MessageBox.Show("Enter correct price" +
+                    "");
+                return; 
+            }
 
             if (cmbServiceType.Text.Contains("Repair"))
             {
+                if (!isHoursValid)
+                {
+                    MessageBox.Show("enter correct hours");
+                    return; 
+                }
+
                 service = new RepairService
                 {
                     Name = "Repair",
                     Type = "Repair",
-                    BasePrice = decimal.Parse(txtPrice.Text),
-                    Hours = int.Parse(txtHours.Text)
+                    BasePrice = price,
+                    Hours = hours
                 };
             }
             else
@@ -271,7 +285,7 @@ namespace AutoServiceManager
                 {
                     Name = "Maintenance",
                     Type = "Maintenance",
-                    BasePrice = decimal.Parse(txtPrice.Text)
+                    BasePrice = price
                 };
             }
 
@@ -281,13 +295,14 @@ namespace AutoServiceManager
                 Date = DateTime.Now,
                 Service = service
             };
+          
+
 
             car.Orders.Add(order);
 
             RefreshOrders(car);
 
-            txtPrice.Clear();
-            txtHours.Clear();
+            ClearOrderFields();
         }
 
         // Delete order
@@ -384,7 +399,7 @@ namespace AutoServiceManager
             }
             else if (result == DialogResult.Cancel)
             {
-                e.Cancel = true; // скасувати закриття
+                e.Cancel = true; 
             }
         }
 

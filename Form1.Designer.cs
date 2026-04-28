@@ -108,7 +108,7 @@
             btnSave.FlatStyle = FlatStyle.Popup;
             btnSave.Font = new Font("Segoe UI", 12F);
             btnSave.ForeColor = Color.Black;
-            btnSave.Location = new Point(515, 564);
+            btnSave.Location = new Point(506, 564);
             btnSave.Name = "btnSave";
             btnSave.Size = new Size(176, 35);
             btnSave.TabIndex = 2;
