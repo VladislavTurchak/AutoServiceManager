@@ -5,41 +5,41 @@ using System.IO;
 
 namespace AutoServiceManager
 {
+    // Partial class – виконання вимоги курсової (розділення класу на кілька файлів)
     public partial class Form1 : Form
     {
-        // прапорець щоб блокувати події під час оновлення таблиць
+        
         bool isLoading = false;
 
         public Form1()
         {
             isLoading = true;
 
-            InitializeComponent();
+            InitializeComponent(); // GUI WinForms – виконання вимоги курсової
 
+            // Робота з файлами – автоматичне завантаження JSON
             if (File.Exists("data.json"))
             {
                 fileManager.Load("data.json");
                 RefreshClients();
             }
 
-
-            //  ВІДКЛЮЧАЄМО події
+            // Події GUI
             dataGridClients.SelectionChanged -= dataGridClients_SelectionChanged;
             dataGridCars.SelectionChanged -= dataGridCars_SelectionChanged;
 
-            // налаштування таблиць
+            // Налаштування таблиць
             dataGridClients.AllowUserToAddRows = false;
             dataGridCars.AllowUserToAddRows = false;
             dataGridOrders.AllowUserToAddRows = false;
 
-            // можна навіть почистити
             dataGridClients.DataSource = null;
             dataGridCars.DataSource = null;
             dataGridOrders.DataSource = null;
 
             dataGridCars.MultiSelect = false;
             dataGridClients.MultiSelect = false;
-            // ВКЛЮЧАЄМО назад
+
             dataGridClients.SelectionChanged += dataGridClients_SelectionChanged;
             dataGridCars.SelectionChanged += dataGridCars_SelectionChanged;
 
@@ -50,23 +50,22 @@ namespace AutoServiceManager
                 fileManager.Load("data.json");
                 RefreshClients();
             }
-
         }
 
-        // менеджер для роботи з файлом
+        // Вимога до курсової - Агрегація – форма використовує об’єкт FileManager
         FileManager fileManager = new FileManager();
 
-
-        // оновлення клієнтів
+        // Оновлення клієнтів
         void RefreshClients()
         {
             dataGridClients.DataSource = null;
             dataGridClients.DataSource = fileManager.Clients;
+
             if (dataGridClients.Rows.Count > 0)
                 dataGridClients_SelectionChanged(this, EventArgs.Empty);
         }
 
-        //  ДОДАТИ КЛІЄНТА
+        // ДОДАТИ КЛІЄНТА
         private void btnAddClient_Click(object sender, EventArgs e)
         {
             if (txtName.Text == "" || txtPhone.Text == "")
@@ -75,17 +74,17 @@ namespace AutoServiceManager
                 return;
             }
 
+            // Створення об'єкта класу Client
             Client client = new Client
             {
                 Name = txtName.Text,
                 Phone = txtPhone.Text
             };
 
-            fileManager.Clients.Add(client);
+            fileManager.Clients.Add(client); // Вимога до курсової - Узагальнена колекція List<Client>
 
             RefreshClients();
 
-            // автоматично вибираємо нового клієнта
             int index = dataGridClients.Rows.Count - 1;
 
             if (index >= 0)
@@ -97,16 +96,16 @@ namespace AutoServiceManager
             ClearClientFields();
         }
 
-        // Delete client
+        // Видалення клієнта
         private void btnDeleteClient_Click(object sender, EventArgs e)
         {
             if (dataGridClients.CurrentRow?.DataBoundItem is not Client client)
                 return;
 
             DialogResult result = MessageBox.Show(
-            "Delete selected client?",
-            "Confirm",
-            MessageBoxButtons.YesNo);
+                "Delete selected client?",
+                "Confirm",
+                MessageBoxButtons.YesNo);
 
             if (result != DialogResult.Yes)
                 return;
@@ -117,36 +116,18 @@ namespace AutoServiceManager
             dataGridCars.DataSource = null;
             dataGridOrders.DataSource = null;
         }
-        // SAVE
+
+        // Збереження у файл
         private void btnSave_Click(object sender, EventArgs e)
         {
-            fileManager.Save("data.json");
+            fileManager.Save("data.json");  // Вимога до курсової - Робота з файлами
         }
 
-        // LOAD
-        private void btnLoad_Click(object sender, EventArgs e)
-        {
-            fileManager.Load("data.json");
-            RefreshClients();
-
-            // ПРИМУСОВО вибираємо першого клієнта після завантаження
-            if (dataGridClients.Rows.Count > 0)
-            {
-                isLoading = false; // переконайтесь, що прапорець дозволяє події
-                dataGridClients.Rows[0].Selected = true;
-
-                // Викликаємо метод оновлення вручну, якщо подія не спрацювала
-                if (dataGridClients.Rows[0].DataBoundItem is Client firstClient)
-                {
-                    RefreshCars(firstClient);
-                }
-            }
-        }
-
-        // оновлення машин
+        // Оновлення машин
         void RefreshCars(Client? client)
         {
-            isLoading = true; // Блокуємо зайві події
+            isLoading = true;
+
             dataGridCars.DataSource = null;
 
             if (client != null && client.Cars != null)
@@ -179,11 +160,11 @@ namespace AutoServiceManager
                 PlateNumber = txtPlate.Text
             };
 
+            // Агрегація – Client містить Cars
             client.Cars.Add(car);
 
             RefreshCars(client);
 
-            // вибираємо нову машину
             int index = dataGridCars.Rows.Count - 1;
 
             if (index >= 0)
@@ -195,7 +176,7 @@ namespace AutoServiceManager
             ClearCarFields();
         }
 
-        //Delete car
+        // Видалення машини
         private void btnDeleteCar_Click(object sender, EventArgs e)
         {
             if (dataGridClients.CurrentRow?.DataBoundItem is not Client client)
@@ -205,9 +186,9 @@ namespace AutoServiceManager
                 return;
 
             DialogResult result = MessageBox.Show(
-           "Delete selected car?",
-           "Confirm",
-            MessageBoxButtons.YesNo);
+                "Delete selected car?",
+                "Confirm",
+                MessageBoxButtons.YesNo);
 
             if (result != DialogResult.Yes)
                 return;
@@ -218,14 +199,13 @@ namespace AutoServiceManager
             dataGridOrders.DataSource = null;
         }
 
-        // оновлення замовлень
+        // Оновлення замовлень
         void RefreshOrders(Car? car)
         {
             if (car == null) return;
 
-
             if (car.Orders == null)
-                car.Orders = new BindingList<Order>();
+                car.Orders = new BindingList<Order>(); // Вимога до курсової - Узагальнена колекція
 
             isLoading = true;
 
@@ -235,7 +215,7 @@ namespace AutoServiceManager
             isLoading = false;
         }
 
-        //  ДОДАТИ ЗАМОВЛЕННЯ
+        // ДОДАТИ ЗАМОВЛЕННЯ
         private void btnAddOrder_Click(object sender, EventArgs e)
         {
             if (txtPrice.Text == "" || cmbServiceType.Text == "")
@@ -250,27 +230,27 @@ namespace AutoServiceManager
                 return;
             }
 
+            Service service; // Поліморфізм – базовий тип
 
-            Service service;
-
+            // Обробка виняткових ситуацій через перевірку вводу
             bool isPriceValid = decimal.TryParse(txtPrice.Text, out decimal price);
             bool isHoursValid = int.TryParse(txtHours.Text, out int hours);
 
             if (!isPriceValid)
             {
-                MessageBox.Show("Enter correct price" +
-                    "");
-                return; 
+                MessageBox.Show("Enter correct price");
+                return;
             }
 
             if (cmbServiceType.Text.Contains("Repair"))
             {
                 if (!isHoursValid)
                 {
-                    MessageBox.Show("enter correct hours");
-                    return; 
+                    MessageBox.Show("Enter correct hours");
+                    return;
                 }
 
+                // Наслідування + поліморфізм
                 service = new RepairService
                 {
                     Name = "Repair",
@@ -295,17 +275,14 @@ namespace AutoServiceManager
                 Date = DateTime.Now,
                 Service = service
             };
-          
-
 
             car.Orders.Add(order);
 
             RefreshOrders(car);
-
             ClearOrderFields();
         }
 
-        // Delete order
+        // Видалення замовлення
         private void btnDeleteOrder_Click(object sender, EventArgs e)
         {
             if (dataGridCars.CurrentRow?.DataBoundItem is not Car car)
@@ -315,34 +292,28 @@ namespace AutoServiceManager
                 return;
 
             DialogResult result = MessageBox.Show(
-           "Delete selected order?",
-           "Confirm",
-           MessageBoxButtons.YesNo);
+                "Delete selected order?",
+                "Confirm",
+                MessageBoxButtons.YesNo);
 
             if (result != DialogResult.Yes)
                 return;
 
-
             car.Orders.Remove(order);
-
             RefreshOrders(car);
         }
 
-        //  зміна клієнта
+        // Подія зміни клієнта
         private void dataGridClients_SelectionChanged(object? sender, EventArgs e)
         {
             if (isLoading) return;
 
-            // Отримуємо поточний вибраний об'єкт клієнта
             if (dataGridClients.CurrentRow?.DataBoundItem is Client selectedClient)
             {
                 RefreshCars(selectedClient);
 
-                // Одразу після зміни клієнта і завантаження машин — 
-                // скидаємо таблицю замовлень, бо машину ще не вибрано
                 dataGridOrders.DataSource = null;
 
-                // Автоматично вибираємо першу машину клієнта, щоб замовлення теж підтягнулися
                 if (dataGridCars.Rows.Count > 0)
                 {
                     dataGridCars.CurrentCell = dataGridCars.Rows[0].Cells[0];
@@ -350,13 +321,11 @@ namespace AutoServiceManager
             }
         }
 
-
-        //  зміна машини
+        // Подія зміни машини
         private void dataGridCars_SelectionChanged(object? sender, EventArgs e)
         {
             if (isLoading) return;
 
-            // Отримуємо поточний вибраний об'єкт машини
             if (dataGridCars.CurrentRow?.DataBoundItem is Car selectedCar)
             {
                 RefreshOrders(selectedCar);
@@ -367,24 +336,27 @@ namespace AutoServiceManager
             }
         }
 
+        // Пошук клієнта
         private void txtSearch_TextChanged(object sender, EventArgs e)
         {
             string searchText = txtSearch.Text.ToLower();
 
             var filtered = fileManager.Clients
-                .Where(c => c.Name.ToLower().Contains(searchText))
+                .Where(c => c.Name.ToLower().Contains(searchText)) // Вимога до курсової LINQ + Lambda
                 .ToList();
 
             dataGridClients.DataSource = null;
             dataGridClients.DataSource = filtered;
         }
 
+        // Показати всіх
         private void btnShowAll_Click(object sender, EventArgs e)
         {
             RefreshClients();
             txtSearch.Clear();
         }
 
+        // Закриття форми
         private void Form1_FormClosing(object sender, FormClosingEventArgs e)
         {
             DialogResult result = MessageBox.Show(
@@ -399,10 +371,8 @@ namespace AutoServiceManager
             }
             else if (result == DialogResult.Cancel)
             {
-                e.Cancel = true; 
+                e.Cancel = true;
             }
         }
-
-      
     }
 }

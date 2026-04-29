@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 
 namespace AutoServiceManager
 {
+    // Вимога курсової: partial class
     public partial class Form1
     {
         // Метод очищення полів клієнта

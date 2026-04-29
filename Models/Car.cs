@@ -7,21 +7,19 @@ using System.Threading.Tasks;
 
 namespace AutoServiceManager.Models
 {
-    // Клас Car описує автомобіль клієнта
+    // Клас з елементами даних і властивостями
     public class Car
     {
-        // Марка автомобіля
+        // public модифікатор доступу
         public required string Brand { get; set; }
 
-        // Модель автомобіля 
         public required string Model { get; set; }
 
-        // номерний знак автомобіля
         public required string PlateNumber { get; set; }
 
-        // Список замовлень (ремонтів/обслуговувань) для цього авто
-        // Використовується узагальнена колекція List
-        // Це приклад агрегації: автомобіль містить замовлення
+        // Вимога курсової:
+        // Узагальнена колекція BindingList<Order>
+        // Агрегація: автомобіль містить список замовлень
         public BindingList<Order> Orders { get; set; } = new BindingList<Order>();
     }
 }

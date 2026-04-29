@@ -6,15 +6,14 @@ using System.Threading.Tasks;
 
 namespace AutoServiceManager.Models
 {
-    // Клас RepairService описує ремонт автомобіля
-    // Наслідує базовий клас Service
+    // Вимога курсової:
+    // Наслідування від Service
     public class RepairService : Service
     {
-        // Кількість годин ремонту
         public int Hours { get; set; }
 
-        // Перевизначення методу розрахунку ціни
-        // Вартість = базова ціна * кількість годин
+        // Вимога курсової:
+        // Поліморфізм (перевизначення методу)
         public override decimal CalculatePrice()
         {
             return BasePrice * Hours;

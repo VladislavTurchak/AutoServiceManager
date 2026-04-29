@@ -6,12 +6,12 @@ using System.Threading.Tasks;
 
 namespace AutoServiceManager.Models
 {
-    // Клас MaintenanceService описує технічне обслуговування (ТО)
-    // Наслідує базовий абстрактний клас Service
+    // Вимога курсової:
+    // Наслідування від абстрактного класу Service
     public class MaintenanceService : Service
     {
-        // Перевизначення методу розрахунку ціни
-        // Для ТО ціна просто базова (фіксована)
+        // Вимога курсової:
+        // Поліморфізм (перевизначення методу)
         public override decimal CalculatePrice()
         {
             return BasePrice;

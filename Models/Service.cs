@@ -1,4 +1,5 @@
-﻿using System;
+﻿/// Service.cs
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -6,17 +7,14 @@ using System.Threading.Tasks;
 
 namespace AutoServiceManager.Models
 {
-    // Абстрактний базовий клас для всіх типів послуг
-    // Від нього наслідуються конкретні послуги (RepairService, MaintenanceService)
+    // Вимога курсової:
+    // Абстрактний клас
     public abstract class Service
     {
-        // Назва послуги
         public string Name { get; set; } = "";
 
-        // Тип послуги (Ремонт, ТО)
         public string Type { get; set; } = "";
 
-        // Базова ціна послуги
         public decimal BasePrice { get; set; }
 
         public override string ToString()
@@ -24,8 +22,7 @@ namespace AutoServiceManager.Models
             return Name;
         }
 
-        // Абстрактний метод розрахунку ціни
-        // Кожен нащадок повинен реалізувати його по-своєму
+        // Абстрактний метод
         public abstract decimal CalculatePrice();
     }
 }

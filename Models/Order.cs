@@ -6,21 +6,17 @@ using System.Threading.Tasks;
 
 namespace AutoServiceManager.Models
 {
-    // Клас Order описує замовлення на ремонт або обслуговування
     public class Order
     {
-        // Унікальний номер замовлення
         public int Id { get; set; }
 
-        // Дата створення замовлення
         public DateTime Date { get; set; }
 
-        // Послуга яка виконується (ремонт або ТО)
-        // Використовується базовий клас Service (поліморфізм)
+        // Вимога курсової:
+        // Використання базового класу Service (поліморфізм)
         public object? Service { get; set; }
 
-        // Загальна ціна замовлення
-        // Автоматично обчислюється через метод CalculatePrice()
+        // Функціональний елемент класу
         public decimal TotalPrice
         {
             get

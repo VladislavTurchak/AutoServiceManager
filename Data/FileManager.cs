@@ -32,9 +32,8 @@ namespace AutoServiceManager.Data
         }
 
         // Метод завантаження даних з файлу
-      
-
-public void Load(string path)
+        // Вимога до курсової - обробка винятків при завантаженні даних (наприклад, якщо файл пошкоджений або має неправильний формат)
+        public void Load(string path)
     {
         try
         {
@@ -44,14 +43,14 @@ public void Load(string path)
 
             foreach (var client in clients)
             {
-                    // 🔥 КОНВЕРТАЦІЯ Cars → BindingList
+                    //  КОНВЕРТАЦІЯ Cars → BindingList
                     client.Cars = client.Cars != null
          ? new BindingList<Car>(client.Cars.ToList())
          : new BindingList<Car>();
 
                     foreach (var car in client.Cars)
                 {
-                        // 🔥 КОНВЕРТАЦІЯ Orders → BindingList
+                        //  КОНВЕРТАЦІЯ Orders → BindingList
                         car.Orders = car.Orders != null
         ? new BindingList<Order>(car.Orders.ToList())
         : new BindingList<Order>();
@@ -63,7 +62,7 @@ public void Load(string path)
 
                         var jsonService = JsonSerializer.Serialize(order.Service);
 
-                        // 🔥 відновлюємо правильний тип (поліморфізм)
+                        //  відновлюємо правильний тип (поліморфізм)
                         if (jsonService.Contains("Repair"))
                         {
                             order.Service = JsonSerializer.Deserialize<RepairService>(jsonService);

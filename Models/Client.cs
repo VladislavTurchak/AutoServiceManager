@@ -7,25 +7,25 @@ using System.ComponentModel;
 
 namespace AutoServiceManager.Models
 {
-    // Клас Client описує клієнта автосервісу
+    // Клас з полями та властивостями
     public class Client
     {
-        // Ім'я клієнта
         public string Name { get; set; }
 
-        // Приватне поле телефону (інкапсуляція)
+        // Вимога курсової:
+        // private модифікатор доступу (інкапсуляція)
         private string phone;
 
-        // Властивість для доступу до телефону
-        // Через get/set можна контролювати доступ до поля
+        // Доступ до private поля через властивість
         public string Phone
         {
             get { return phone; }
             set { phone = value; }
         }
 
-        // Список автомобілів клієнта
-        // Це агрегація: клієнт має автомобілі
+        // Вимога курсової:
+        // Узагальнена колекція BindingList<Car>
+        // Агрегація: клієнт має автомобілі
         public BindingList<Car> Cars { get; set; } = new BindingList<Car>();
     }
 }
