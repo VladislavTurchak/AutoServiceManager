@@ -2,6 +2,7 @@
 using AutoServiceManager.Models;
 using System.ComponentModel;
 using System.IO;
+using static System.Windows.Forms.LinkLabel;
 
 namespace AutoServiceManager
 {
@@ -341,9 +342,9 @@ namespace AutoServiceManager
         {
             string searchText = txtSearch.Text.ToLower();
 
-            var filtered = fileManager.Clients
-                .Where(c => c.Name.ToLower().Contains(searchText)) // Вимога до курсової LINQ + Lambda
-                .ToList();
+            var filtered = (from c in fileManager.Clients
+                            where c.Name.ToLower().Contains(searchText.ToLower()) // Вимога до курсової LINQ 
+                            select c).ToList();
 
             dataGridClients.DataSource = null;
             dataGridClients.DataSource = filtered;
@@ -376,3 +377,4 @@ namespace AutoServiceManager
         }
     }
 }
+

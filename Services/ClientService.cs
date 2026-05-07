@@ -10,7 +10,7 @@ namespace AutoServiceManager.Services
         public Client? FindClient(string name)
         {
             // Вимога курсової:
-            // LINQ + Lambda вираз
+            // Lambda вираз
             return Clients.FirstOrDefault(c => c.Name == name);
         }
     }
